@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PointPilot — Offers</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand"><i></i> <span>PointPilot</span></div>
+      <nav style="margin-left:auto; display:flex; gap:8px;">
+        <a href="./index.html">Home</a>
+        <a href="./tasks.html">Tasks</a>
+        <a class="active" href="./offers.html">Offers</a>
+        <a href="./referral.html">Referral</a>
+        <a href="./profile.html">Profile</a>
+        <a href="./admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Affiliate offers (sample)</h2>
+      <div class="list" id="offers"></div>
+    </section>
+    <section class="card" style="margin-top:16px;">
+      <h2>Notes</h2>
+      <p>Real integrations would fetch offers securely on the server-side using network partner APIs and signed requests. Keys should never be exposed in client-side code.</p>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <small>Demo prototype. Not affiliated with any brands.</small>
+  </footer>
+
+  <script type="module">
+    import { onReady } from './js/app.js';
+
+    const sample = [
+      { id: 'o1', title: 'Try a Music App', payoutCents: 200, categories: ['Entertainment'] },
+      { id: 'o2', title: 'Install Finance App', payoutCents: 350, categories: ['Finance'] },
+      { id: 'o3', title: 'Sign up for Newsletter', payoutCents: 100, categories: ['Shopping'] },
+    ];
+
+    function render() {
+      const wrap = document.getElementById('offers');
+      wrap.innerHTML='';
+      sample.forEach(o => {
+        const row = document.createElement('div');
+        row.className = 'list-item';
+        row.innerHTML = `<span>${o.title} <span style='color:#9ca3af'>(${(o.payoutCents/100).toFixed(2)} USD)</span></span><button class='btn'>View</button>`;
+        wrap.appendChild(row);
+      });
+    }
+
+    onReady(render);
+  </script>
+</body>
+</html>
