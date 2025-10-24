@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PointPilot — Referral</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand"><i></i> <span>PointPilot</span></div>
+      <nav style="margin-left:auto; display:flex; gap:8px;">
+        <a href="./index.html">Home</a>
+        <a href="./tasks.html">Tasks</a>
+        <a href="./offers.html">Offers</a>
+        <a class="active" href="./referral.html">Referral</a>
+        <a href="./profile.html">Profile</a>
+        <a href="./admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Invite friends</h2>
+      <p>Share your referral code. For demo only.</p>
+      <div style="display:grid; gap:8px; max-width:420px;">
+        <label class="label">Your code</label>
+        <input id="my-code" class="input" value="" readonly>
+        <label class="label">Apply a referral code</label>
+        <div style="display:flex; gap:8px;">
+          <input id="apply-code" class="input" placeholder="Enter code">
+          <button id="apply-btn" class="btn">Apply</button>
+        </div>
+        <p id="msg" class="muted"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <small>Referral rewards subject to verification and fraud prevention.</small>
+  </footer>
+
+  <script type="module">
+    import { onReady, getState } from './js/app.js';
+
+    onReady(() => {
+      const s = getState();
+      document.getElementById('my-code').value = s.user.referralCode;
+      document.getElementById('apply-btn').addEventListener('click', () => {
+        const code = document.getElementById('apply-code').value.trim();
+        document.getElementById('msg').textContent = code ? `Applied code ${code} (demo only)` : 'Enter a code';
+      });
+    });
+  </script>
+</body>
+</html>

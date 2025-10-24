@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PointPilot — Admin</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand"><i></i> <span>PointPilot</span></div>
+      <nav style="margin-left:auto; display:flex; gap:8px;">
+        <a href="./index.html">Home</a>
+        <a href="./tasks.html">Tasks</a>
+        <a href="./offers.html">Offers</a>
+        <a href="./referral.html">Referral</a>
+        <a href="./profile.html">Profile</a>
+        <a class="active" href="./admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="grid">
+      <div class="card">
+        <h2>Create task (demo)</h2>
+        <div style="display:grid; gap:8px; max-width:520px;">
+          <label class="label">Title</label>
+          <input id="title" class="input" placeholder="E.g., Daily Survey">
+          <label class="label">Points</label>
+          <input id="points" class="input" type="number" min="1" value="25">
+          <button id="add" class="btn">Add task</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Tasks</h2>
+        <div class="list" id="tasks"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <small>Admin actions here update demo state only.</small>
+  </footer>
+
+  <script type="module">
+    import { onReady, getState } from './js/app.js';
+
+    onReady(() => {
+      function render() {
+        const s = getState();
+        const list = document.getElementById('tasks');
+        list.innerHTML = '';
+        s.tasks.forEach(t => {
+          const row = document.createElement('div');
+          row.className = 'list-item';
+          row.innerHTML = `<span>${t.title}</span><span>${t.points} pts</span>`;
+          list.appendChild(row);
+        });
+      }
+
+      render();
+
+      document.getElementById('add').addEventListener('click', () => {
+        const s = getState();
+        const title = document.getElementById('title').value.trim();
+        const points = Number(document.getElementById('points').value || '0');
+        if (!title || !points) return;
+        s.tasks.unshift({ id: `t${Date.now()}`, title, description: 'User created task', type: 'survey', points, status: 'available' });
+        localStorage.setItem('rewards_demo_state_v1', JSON.stringify(s));
+        render();
+      });
+    });
+  </script>
+</body>
+</html>

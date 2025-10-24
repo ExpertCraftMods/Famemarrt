@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PointPilot — Profile</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand"><i></i> <span>PointPilot</span></div>
+      <nav style="margin-left:auto; display:flex; gap:8px;">
+        <a href="./index.html">Home</a>
+        <a href="./tasks.html">Tasks</a>
+        <a href="./offers.html">Offers</a>
+        <a href="./referral.html">Referral</a>
+        <a class="active" href="./profile.html">Profile</a>
+        <a href="./admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="grid">
+      <div class="card">
+        <h2>Profile</h2>
+        <div class="list">
+          <div class="list-item"><span>Name</span><span id="name">Demo User</span></div>
+          <div class="list-item"><span>Referral code</span><span id="code">—</span></div>
+          <div class="list-item"><span>Points</span><span id="points">0</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>History</h2>
+        <div class="list" id="history"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <small>Data here is client-side demo state.</small>
+  </footer>
+
+  <script type="module">
+    import { onReady, getState, formatPoints } from './js/app.js';
+
+    onReady(() => {
+      const s = getState();
+      document.getElementById('name').textContent = s.user.displayName;
+      document.getElementById('code').textContent = s.user.referralCode;
+      document.getElementById('points').textContent = formatPoints(s.user.points);
+      const h = document.getElementById('history');
+      h.innerHTML = '';
+      s.activity.forEach(a => {
+        const row = document.createElement('div');
+        row.className = 'list-item';
+        row.innerHTML = `<span>${a.note}</span><span>${a.amount > 0 ? '+' : ''}${a.amount} pts</span>`;
+        h.appendChild(row);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PointPilot — Earn rewards by doing tasks</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand"><i></i> <span>PointPilot</span></div>
+      <nav style="margin-left:auto; display:flex; gap:8px;">
+        <a class="active" href="./index.html">Home</a>
+        <a href="./tasks.html">Tasks</a>
+        <a href="./offers.html">Offers</a>
+        <a href="./referral.html">Referral</a>
+        <a href="./profile.html">Profile</a>
+        <a href="./admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="app">
+    <section class="grid">
+      <div class="card">
+        <h2>Your balance</h2>
+        <div class="stat"><span>Total points</span><b id="points">0 pts</b></div>
+      </div>
+      <div class="card">
+        <h2>Cash out (mock)</h2>
+        <p>For demo only. No real payments.</p>
+        <div style="display:grid; gap:8px;">
+          <label class="label" for="amount">Amount (USD)</label>
+          <input id="amount" class="input" type="number" min="1" value="5">
+          <button id="cashout" class="btn success">Cash out</button>
+          <p id="cashout-msg" class="muted"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:16px;">
+      <h2>Recent activity</h2>
+      <div class="list" id="activity"></div>
+    </section>
+
+    <section class="card" style="margin-top:16px;">
+      <h2>Available tasks</h2>
+      <div class="tasks" id="tasks"></div>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <small>© 2025 PointPilot. Demo prototype. Not affiliated with any brands. All trademarks belong to their respective owners.</small>
+  </footer>
+
+  <script type="module">
+    import { onReady, getState, formatPoints, completeTask, cashOutDemo } from './js/app.js';
+
+    function render() {
+      const state = getState();
+      document.getElementById('points').textContent = formatPoints(state.user.points);
+
+      const tasksEl = document.getElementById('tasks');
+      tasksEl.innerHTML = '';
+      state.tasks.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'task';
+        div.innerHTML = `
+          <div>
+            <h3>${t.title} · <span style="color:#9ca3af;font-weight:500;">${t.points} pts</span></h3>
+            <p>${t.description}</p>
+          </div>
+          <div>
+            ${t.status === 'completed' ? '<button class="btn secondary" disabled>Completed</button>' : `<button class="btn" data-id="${t.id}">Complete</button>`}
+          </div>`;
+        tasksEl.appendChild(div);
+      });
+
+      const act = document.getElementById('activity');
+      act.innerHTML = '';
+      getState().activity.slice(0, 10).forEach(a => {
+        const row = document.createElement('div');
+        row.className = 'list-item';
+        row.innerHTML = `<span>${a.note}</span><span>${a.amount > 0 ? '+' : ''}${a.amount} pts</span>`;
+        act.appendChild(row);
+      });
+
+      document.querySelectorAll('button[data-id]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          completeTask(id);
+          render();
+        });
+      });
+    }
+
+    onReady(() => {
+      render();
+      document.getElementById('cashout').addEventListener('click', () => {
+        const val = Number(document.getElementById('amount').value || '0');
+        const res = cashOutDemo(Math.round(val * 100));
+        const msg = document.getElementById('cashout-msg');
+        if (res.ok) { msg.textContent = 'Cash out requested (mock). Balance updated.'; }
+        else { msg.textContent = res.error; }
+        render();
+      });
+    });
+  </script>
+</body>
+</html>
